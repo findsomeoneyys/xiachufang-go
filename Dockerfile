@@ -24,7 +24,7 @@ RUN cd $GOPATH/src/github.com/findsomeoneyys/xiachufang-api && go build .
 
 FROM base AS final
 # COPY 源路径 目标路径 从镜像中 COPY
-COPY --from=builder /opt/repo/src/github.com/findsomeoneyys/xiachufang-api /opt
+COPY --from=build /opt/repo/src/github.com/findsomeoneyys/xiachufang-api /opt
 # WORKDIR 设置工作目录
 WORKDIR /opt
 # CMD 设置启动命令

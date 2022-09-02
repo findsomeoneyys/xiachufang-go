@@ -8,13 +8,18 @@ import (
 // InitRouter initialize routing information
 func InitRouter(r *gin.Engine) {
 
-	group := r.Group("/api")
-	group.GET("/search/:keyword", api.Search)
+	apiGroup := r.Group("/api")
+
+	//健康检查
+	apiGroup.HEAD("/healthcheck", api.HealthCheck)
+
+	//搜索
+	apiGroup.GET("/search/:keyword", api.Search)
 
 	//分类
-	group.GET("/category", api.GetAllCategory)
-	group.GET("/category/:no/*searchType", api.SearchCategory)
+	apiGroup.GET("/category", api.GetAllCategory)
+	apiGroup.GET("/category/:no/*searchType", api.SearchCategory)
 
 	// 菜谱
-	group.GET("/recipe/:no", api.GetRecipe)
+	apiGroup.GET("/recipe/:no", api.GetRecipe)
 }

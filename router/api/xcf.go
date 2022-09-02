@@ -13,6 +13,12 @@ import (
 // res, _ := client.Search("西瓜", 2)
 // res, _ := client.GetRecipe("101829462")
 
+func HealthCheck(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "ok",
+	})
+}
+
 func Search(c *gin.Context) {
 	appG := app.Gin{C: c}
 	client := xiachufang.NewClient()

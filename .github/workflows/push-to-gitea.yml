@@ -1,0 +1,19 @@
+on: 
+  push:
+  workflow_dispatch:
+  
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: mirror
+        uses: mathisve/git-mirror-action@latest
+        with:
+          originalURL: https://github.com/findsomeoneyys/xiachufang-go.git
+          originalBranch: master
+          mirrorURL: https://gitea.hafuhafu.cn/StoneShiLei/xiachufang-go.git
+          mirrorBranch: master
+          verbose: true
+          force: true
+          tags: true
+          pat: ${{ secrets.PAT }}

@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xiachufang
+  namespace: default
+  labels:
+    app: xiachufang
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xiachufang
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: xiachufang
+    spec:
+      containers:
+        - name: xiachufang
+          image: registry-vpc.cn-shanghai.aliyuncs.com/hulu0811/xiachufang-go:{{.image_tag}}
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: xiachufang
+  namespace: default
+  labels:
+    app: xiachufang
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+  selector:
+    app: xiachufang
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: xiachufang
+  namespace: default
+  labels:
+    app: xiachufang
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+spec:
+  rules:
+    - host: xiachufang.hafuhafu.cn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: xiachufang
+                port:
+                  number: 80

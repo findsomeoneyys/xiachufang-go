@@ -1,0 +1,47 @@
+kind: pipeline
+type: kubernetes
+name: hulu-project
+
+steps:
+- name: docker-final
+  image: plugins/docker
+  settings:
+    mirror: https://jnyis2wm.mirror.aliyuncs.com
+    username:
+      from_secret: username
+    password:
+      from_secret: password
+    repo: registry-vpc.cn-shanghai.aliyuncs.com/hulu0811/xiachufang-go
+    registry: registry-vpc.cn-shanghai.aliyuncs.com
+    tags:
+      - latest
+      - ${DRONE_COMMIT}
+
+- name: dron8s-api
+  image: bh90210/dron8s:latest
+  settings:
+    yaml: ./deploy.yaml
+    image_tag: ${DRONE_COMMIT}
+    kubeconfig:
+        from_secret: kubeconfig
+
+---
+kind: secret
+name: username
+get:
+  path: docker-secret
+  name: DOCKER_USERNAME
+
+---
+kind: secret
+name: password
+get:
+  path: docker-secret
+  name: DOCKER_PASSWORD
+
+---
+kind: secret
+name: kubeconfig
+get:
+  path: kubeconfig
+  name: KUBECONFIG

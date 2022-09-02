@@ -11,6 +11,6 @@ jobs:
           fetch-depth: 0
       - uses: yesolutions/mirror-action@master
         with:
-          REMOTE: 'http://gitea.hafuhafu.cn/StoneShiLei/test.git'
+          REMOTE: 'http://gitea.hafuhafu.cn/StoneShiLei/xiachufang-go.git'
           GIT_USERNAME: StoneShiLei
           GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}

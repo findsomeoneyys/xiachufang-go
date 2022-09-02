@@ -6,14 +6,11 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     steps:
-      - name: mirror
-        uses: mathisve/git-mirror-action@latest
+      - uses: actions/checkout@v3
         with:
-          originalURL: https://github.com/findsomeoneyys/xiachufang-go.git
-          originalBranch: master
-          mirrorURL: https://gitea.hafuhafu.cn/StoneShiLei/xiachufang-go.git
-          mirrorBranch: master
-          verbose: true
-          force: true
-          tags: true
-          pat: ${{ secrets.PAT }}
+          fetch-depth: 0
+      - uses: yesolutions/mirror-action@master
+        with:
+          REMOTE: 'http://gitea.hafuhafu.cn/StoneShiLei/test.git'
+          GIT_USERNAME: StoneShiLei
+          GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}

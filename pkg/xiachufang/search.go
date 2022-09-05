@@ -40,7 +40,10 @@ func ParseSearchPage(doc *goquery.Document) *RecipeListResult {
 			link, _ = UrlRelativeToAbsolute(link)
 		}
 
-		imgSrc, _ := imgCover.Find(".cover img").Attr("data-src")
+		imgSrc, exits := imgCover.Find(".cover img").Attr("data-src")
+		if exits {
+			imgSrc = strings.Split(imgSrc, "?")[0]
+		}
 
 		// 详情
 		info := s.Find(".info")

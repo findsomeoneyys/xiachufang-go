@@ -36,7 +36,10 @@ func ParseRecipePage(doc *goquery.Document) *Recipe {
 	// 封面
 	main := doc.Find(".main-panel")
 	imgNode := main.Find(".recipe-show .image img").First()
-	imgSrc, _ := imgNode.Attr("src")
+	imgSrc, exits := imgNode.Attr("src")
+	if exits {
+		imgSrc = strings.Split(imgSrc, "?")[0]
+	}
 
 	// x.x综合评分  xx人做过这道菜
 	var score float64
@@ -127,8 +130,6 @@ func ParseRecipePage(doc *goquery.Document) *Recipe {
 			no = strings.Trim(link, "/")
 			p := strings.Split(no, "/")
 			no = p[len(p)-1]
-			// no = strings.Trim(no, "category")
-			// no = strings.Trim(link, "/")
 
 			link, _ = UrlRelativeToAbsolute(link)
 		}

@@ -1,0 +1,5 @@
+server:
+  runMode: release
+  httpPort: 8080
+  readTimeout: 60
+  writeTimeout: 60

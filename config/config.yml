@@ -1,3 +1,0 @@
-HttpPort: 8080
-# RunMode: release
-RunMode: debug

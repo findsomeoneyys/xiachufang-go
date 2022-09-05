@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/findsomeoneyys/xiachufang-api/config"
 	"github.com/findsomeoneyys/xiachufang-api/router"
@@ -16,15 +17,18 @@ func main() {
 
 	config := config.Get()
 
-	gin.SetMode(config.RunMode)
+	gin.SetMode(config.Server.RunMode)
 	g := gin.Default()
 	router.InitRouter(g)
 
-	endPoint := fmt.Sprintf(":%d", config.HttpPort)
+	endPoint := fmt.Sprintf(":%d", config.Server.HttpPort)
 
 	server := &http.Server{
-		Addr:    endPoint,
-		Handler: g,
+		Addr:           endPoint,
+		Handler:        g,
+		ReadTimeout:    config.Server.ReadTimeout * time.Second,
+		WriteTimeout:   config.Server.WriteTimeout * time.Second,
+		MaxHeaderBytes: 1 << 20,
 	}
 
 	quit := make(chan os.Signal)

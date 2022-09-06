@@ -1,0 +1,217 @@
+definitions:
+  app.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  xiachufang.Author:
+    properties:
+      avatar:
+        type: string
+      link:
+        type: string
+      name:
+        type: string
+    type: object
+  xiachufang.Category:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/xiachufang.Category'
+        type: array
+      link:
+        type: string
+      name:
+        type: string
+      "no":
+        type: string
+    type: object
+  xiachufang.Recipe:
+    properties:
+      author:
+        items:
+          $ref: '#/definitions/xiachufang.Author'
+        type: array
+      category:
+        items:
+          $ref: '#/definitions/xiachufang.Category'
+        type: array
+      cooked:
+        description: 正常搜索菜谱展示
+        type: integer
+      cooked_last_7_day:
+        description: 分类搜索时展示
+        type: integer
+      cover:
+        type: string
+      desc:
+        type: string
+      link:
+        type: string
+      materials:
+        items:
+          $ref: '#/definitions/xiachufang.RecipeMaterial'
+        type: array
+      name:
+        type: string
+      score:
+        type: number
+      steps:
+        items:
+          $ref: '#/definitions/xiachufang.RecipeStep'
+        type: array
+      tip:
+        type: string
+    type: object
+  xiachufang.RecipeListResult:
+    properties:
+      current:
+        type: integer
+      next_page:
+        type: string
+      prev_page:
+        type: string
+      recipes:
+        items:
+          $ref: '#/definitions/xiachufang.Recipe'
+        type: array
+    type: object
+  xiachufang.RecipeMaterial:
+    properties:
+      link:
+        type: string
+      name:
+        type: string
+      unit:
+        type: string
+    type: object
+  xiachufang.RecipeStep:
+    properties:
+      desc:
+        type: string
+      img:
+        type: string
+      step:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/category/:
+    get:
+      consumes:
+      - application/json
+      description: 获取下厨房全部分类
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/app.Response'
+            - properties:
+                data:
+                  additionalProperties:
+                    items:
+                      $ref: '#/definitions/xiachufang.Category'
+                    type: array
+                  type: object
+              type: object
+      tags:
+      - 下厨房
+  /api/category/{no}:
+    get:
+      consumes:
+      - application/json
+      description: 获取下厨房某个分类菜谱
+      parameters:
+      - description: 分类
+        in: path
+        name: "no"
+        required: true
+        type: string
+      - description: 排序方式 默认:最近流行 pop:最受欢迎 time:评分
+        in: query
+        name: sort
+        type: string
+      - description: 获取第几页, 默认第一页
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/app.Response'
+            - properties:
+                data:
+                  additionalProperties:
+                    items:
+                      $ref: '#/definitions/xiachufang.Category'
+                    type: array
+                  type: object
+              type: object
+      tags:
+      - 下厨房
+  /api/recipe/{no}:
+    get:
+      consumes:
+      - application/json
+      description: 下厨房 获取菜谱
+      parameters:
+      - description: 菜谱编号
+        in: path
+        name: "no"
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/app.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/xiachufang.Recipe'
+              type: object
+      tags:
+      - 下厨房
+  /api/search/{keyword}:
+    get:
+      consumes:
+      - application/json
+      description: 下厨房搜索 可搜索分类/菜谱..
+      parameters:
+      - description: 搜索关键字
+        in: path
+        name: keyword
+        required: true
+        type: string
+      - description: 获取第几页, 默认第一页
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/app.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/xiachufang.RecipeListResult'
+              type: object
+      tags:
+      - 下厨房
+swagger: "2.0"
